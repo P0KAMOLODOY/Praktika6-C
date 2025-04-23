@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+#define MAX_LINES 100
+#define MAX_LINE_LENGTH 100
+
+int main() {
+    char lines[MAX_LINES][MAX_LINE_LENGTH];
+    int line_count = 0;
+    
+    // Чтение ввода (можно заменить на чтение из файла)
+    printf("Введите текст (пустая строка для завершения):\n");
+    while (line_count < MAX_LINES && fgets(lines[line_count], MAX_LINE_LENGTH, stdin)) {
+        if (lines[line_count][0] == '\n') break;
+        // Удаляем символ новой строки
+        lines[line_count][strcspn(lines[line_count], "\n")] = '\0';
+        line_count++;
+    }
+
+    if (line_count == 0) {
+        printf("Нет данных для обработки\n");
+        return 1;
+    }
+
+    // 1. Выводим имя файла
+    printf("Имя файла: %s\n", lines[0]);
+
+    // 2. Объединяем содержимое
+    char content[MAX_LINES * MAX_LINE_LENGTH] = "";
+    for (int i = 1; i < line_count; i++) {
+        strcat(content, lines[i]);
+        strcat(content, "\n");
+    }
+
+    // 3. Выводим содержимое
+    printf("\nСодержимое файла:\n%s", content);
+
+    // 4. Проверяем наличие слова "Привет"
+    const char *target = "Привет";
+    char *found = strstr(content, target);
+    
+    if (found != NULL) {
+        printf("\nСлово \"%s\" найдено в тексте\n", target);
+    } else {
+        printf("\nСлово \"%s\" не найдено\n", target);
+    }
+
+    return 0;
+}
